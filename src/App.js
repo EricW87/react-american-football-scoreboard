@@ -7,6 +7,7 @@ function App() {
   //TODO: STEP 2 - Establish your applictaion's state with some useState hooks.  You'll need one for the home score and another for the away score.
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
+  const [quarter, setQuarter] = useState(1);
 
   function scoreHandler(teamName, score)
   {
@@ -16,16 +17,23 @@ function App() {
       setAwayScore(awayScore + score); 
   };
 
+  function quarterHandler()
+  {
+    if(quarter < 4)
+      setQuarter(quarter + 1);
+    else 
+      setQuarter(1);
+  };
 
   return (
     <div className="container">
-      {ScoreBoard(homeScore, awayScore)};
-      {Buttons(scoreHandler)};
+      {ScoreBoard(homeScore, awayScore, quarter)};
+      {Buttons(scoreHandler, quarterHandler)};
     </div>
   );
 }
 
-function ScoreBoard (homeScore, awayScore) {
+function ScoreBoard (homeScore, awayScore, quarter) {
   return (
     <section className="scoreboard">
     <div className="topRow">
@@ -42,17 +50,17 @@ function ScoreBoard (homeScore, awayScore) {
         <div className="away__score">{awayScore}</div>
       </div>
     </div>
-    <BottomRow />
+    {BottomRow(quarter)}
     </section>
   );
 }
 
-function Buttons(scoreHandler) {
+function Buttons(scoreHandler, quarterHandler) {
   return (
     <section className="buttons">
-      {HomeButtons(scoreHandler)};
-      {AwayButtons(scoreHandler)};
-
+      {HomeButtons(scoreHandler)}
+      {QuarterButton(quarterHandler)}
+      {AwayButtons(scoreHandler)}
     </section>
   );
 }
@@ -68,6 +76,15 @@ function HomeButtons(scoreHandler) {
 
 }
 
+function QuarterButton(quarterHandler) {
+  return (
+    <div className="quarterButton">
+      <button className="quarterButton" onClick={ () => quarterHandler()}>Quarter</button>
+    </div>
+  );
+
+}
+
 function AwayButtons(scoreHandler) {
   return (
     <div className="awayButtons">
@@ -77,6 +94,8 @@ function AwayButtons(scoreHandler) {
   );
   
 }
+
+
 
 
 
