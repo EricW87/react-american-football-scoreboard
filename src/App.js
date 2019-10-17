@@ -1,5 +1,5 @@
 //TODO: STEP 1 - Import the useState hook.
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import BottomRow from "./BottomRow";
 
@@ -25,6 +25,7 @@ function App() {
       setQuarter(1);
   };
 
+
   return (
     <div className="container">
       {ScoreBoard(homeScore, awayScore, quarter)};
@@ -34,17 +35,38 @@ function App() {
 }
 
 function ScoreBoard (homeScore, awayScore, quarter) {
+  const [minute, setMinute] = useState(1);
+  const [second, setSecond] = useState(0);
+
+  function resetTime() {
+    setMinute(15);
+    setSecond(0);
+  }
+  
+  useEffect(() => {
+    let interval = null;
+    interval = setInterval(() => {
+      if(second === 0 && minute > 0)
+      {
+        setMinute(minute - 1);
+        setSecond(59);
+      }
+      else if(second > 0)
+        setSecond(second - 1);
+      else
+        resetTime();
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
   return (
     <section className="scoreboard">
     <div className="topRow">
       <div className="home">
         <h2 className="home__name">Lions</h2>
-
-        {/* TODO STEP 3 - We need to change the hardcoded values in these divs to accept dynamic values from our state. */}
-
         <div className="home__score">{homeScore}</div>
       </div>
-      <div className="timer">00:03</div>
+        {second > 0 ? <div className="timer">{minute}:{second}</div> : <div className="timer">{minute}:{second}0</div>}
       <div className="away">
         <h2 className="away__name">Tigers</h2>
         <div className="away__score">{awayScore}</div>
